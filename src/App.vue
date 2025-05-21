@@ -18,4 +18,5 @@
 <script setup lang="ts">
 import EntryForm from "./components/EntryForm.vue";
 import EntryList from "./components/EntryList.vue";
+import SummaryCard from "./components/SummaryCard.vue";
 </script>
