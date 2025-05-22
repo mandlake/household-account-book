@@ -17,6 +17,11 @@ export const useLedgerStore = defineStore("ledger", () => {
     entries.value.push(entry);
   };
 
+  // ✅ 항목 삭제 기능
+  const removeEntry = (index: number) => {
+    entries.value.splice(index, 1);
+  };
+
   // 총 수입 (양수)
   const totalIncome = computed(() =>
     entries.value
@@ -37,6 +42,7 @@ export const useLedgerStore = defineStore("ledger", () => {
   return {
     entries,
     addEntry,
+    removeEntry,
     totalIncome,
     totalExpense,
     balance,

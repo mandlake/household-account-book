@@ -10,20 +10,30 @@
       <li
         v-for="(entry, index) in sortedEntries"
         :key="index"
-        class="p-3 border rounded flex justify-between items-start">
-        <div>
-          <div class="font-semibold">{{ entry.title }}</div>
+        class="p-4 border rounded-lg bg-white flex justify-between items-center">
+        <!-- 왼쪽: 항목 정보 -->
+        <div class="flex-2 flex-col justify-items-start">
+          <div class="text-lg font-semibold">{{ entry.title }}</div>
           <div class="text-sm text-gray-500">
             {{ formatDate(entry.date) }} • {{ entry.memo }}
           </div>
         </div>
-        <div
-          :class="{
-            'text-green-600': entry.amount > 0,
-            'text-red-600': entry.amount < 0,
-          }"
-          class="font-bold">
-          {{ formatAmount(entry.amount) }}
+
+        <!-- 오른쪽: 금액 및 삭제 -->
+        <div class="flex-col justify-items-start">
+          <div
+            :class="{
+              'text-green-600': entry.amount > 0,
+              'text-red-600': entry.amount < 0,
+            }"
+            class="text-lg font-bold">
+            {{ formatAmount(entry.amount) }}
+          </div>
+          <button
+            @click="deleteEntry(index)"
+            class="text-s text-red-500 hover:underline mt-1 pl-4">
+            삭제
+          </button>
         </div>
       </li>
     </ul>
@@ -45,6 +55,22 @@ const sortedEntries = computed(() => {
     return b.date.localeCompare(a.date);
   });
 });
+
+// 삭제 처리 함수
+const deleteEntry = (indexInSorted: number) => {
+  // 정렬된 배열이기 때문에 원래 index를 찾아야 함
+  const entryToDelete = sortedEntries.value[indexInSorted];
+  const originalIndex = entries.value.findIndex(
+    (e) =>
+      e.title === entryToDelete.title &&
+      e.amount === entryToDelete.amount &&
+      e.date === entryToDelete.date &&
+      e.memo === entryToDelete.memo
+  );
+  if (originalIndex !== -1) {
+    ledgerStore.removeEntry(originalIndex);
+  }
+};
 
 // 금액 표시 포맷: +12,000원 / -8,000원
 const formatAmount = (value: number) => {
